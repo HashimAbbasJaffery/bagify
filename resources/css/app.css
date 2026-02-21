@@ -1,0 +1,128 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --color-primary: #000000;
+    --color-shade: #191919;
+    --color-secondary: #833116;
+    --color-grey: #555;
+    --color-lightgrey: #aaaaaa;
+    --color-royal: #EA9A00;
+    --spacing-main-max: 1320px;
+    --font-poppins: "Poppins", sans-serif;
+    --spacing-small: 25px;
+    --radius-xxs: 2px;
+    --radius-xs: 10px;
+    --radius-small: 502px;
+    --background-image: none;
+    --cover-pattern: none;
+}
+
+@utility container {
+    max-width: var(--spacing-main-max);
+    margin: 0 auto;
+}
+
+@utility cover {
+    height: 720px;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        var(--background-image);
+    background-size: cover;
+    background-position: center;
+}
+
+.zigzag-pattern {
+    background-image: var(--cover-pattern)
+}
+
+@utility footer-social-media-icons {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+
+    &:hover {
+        color: black;
+        background: white
+    }
+}
+
+@utility link-ltr {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+
+    /* Create the underline using a pseudo-element */
+    &::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px; /* Thickness of the line */
+        bottom: -2px; /* Distance from text */
+        left: 0;
+        background-color: var(--color-primary); /* Uses your black color */
+        
+        /* The Magic: Start at 0 width and anchor to the left */
+        transform: scaleX(0);
+        transform-origin: bottom left;
+        transition: transform 0.3s ease-out;
+    }
+
+    /* On hover, scale to 100% width */
+    &:hover::after {
+        transform: scaleX(1);
+    }
+}
+
+@utility link-ltr-white {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+
+    /* Create the underline using a pseudo-element */
+    &::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px; /* Thickness of the line */
+        bottom: -2px; /* Distance from text */
+        left: 0;
+        background-color: white; /* Uses your black color */
+        
+        /* The Magic: Start at 0 width and anchor to the left */
+        transform: scaleX(0);
+        transform-origin: bottom left;
+        transition: transform 0.3s ease-out;
+    }
+
+    /* On hover, scale to 100% width */
+    &:hover::after {
+        transform: scaleX(1);
+    }
+}
+
+.our-stores {
+    width: 31.51%;
+}
+
+.who-are-we {
+    width: 36.96%;
+}
+.newsletter {
+    width: 28.78%;
+    margin-left: 2.75%;
+}
+.store-list {
+    width: 45.67%;
+}
+

@@ -332,7 +332,8 @@
     max-width: 1000px;
 }
 
-.cart-drawer, .wishlist-drawer {
+.cart-drawer,
+.wishlist-drawer {
     position: fixed;
     top: 0;
     right: 0;
@@ -348,6 +349,55 @@
     will-change: transform;
 }
 
-.cart-drawer.active, .wishlist-drawer.active {
+.cart-drawer.active,
+.wishlist-drawer.active {
     transform: translateX(0) !important;
+}
+
+/* Floating Animation */
+@keyframes water-float {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); }
+    33% { transform: translateY(-8px) translateX(2px) rotate(0.5deg); }
+    66% { transform: translateY(8px) translateX(-2px) rotate(-0.5deg); }
+    100% { transform: translateY(0) translateX(0) rotate(0deg); }
+}
+
+.floating-water {
+    animation: water-float 6s ease-in-out infinite;
+    transform-origin: center;
+}
+
+/* Continuous Ripple Effect */
+@keyframes ripple {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.3); opacity: 0; }
+}
+
+.ripple-effect {
+    position: relative;
+    z-index: 1;
+}
+
+.ripple-effect::before,
+.ripple-effect::after,
+.ripple-ring {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    animation: ripple 4s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.ripple-effect::after {
+    animation-delay: 1.33s;
+}
+
+.ripple-ring {
+    animation-delay: 2.66s;
 }

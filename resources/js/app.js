@@ -30,11 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const loading = document.getElementById('search-loading');
 
             if (this.value.length > 0) {
-                // Show loading, hide results
                 loading.classList.remove('hidden');
                 results.classList.add('hidden', 'opacity-0', 'translate-y-4');
 
-                // Simulate loading delay (demo)
                 clearTimeout(window.searchTimeout);
 
                 window.searchTimeout = setTimeout(() => {
@@ -43,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(() => {
                         results.classList.remove('opacity-0', 'translate-y-4');
                     }, 0);
-                }, 0); // 800ms delay
+                }, 0);
 
             } else {
                 loading.classList.add('hidden');
@@ -54,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Close on Esc key
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
                 closeSearchOverlay();
@@ -127,6 +124,42 @@ document.addEventListener('DOMContentLoaded', function () {
             if (e.key === 'Escape' && wishlistDrawer.classList.contains('active')) {
                 closeWishlistDrawer();
             }
+        });
+    }
+
+    // Category Slider Logic
+    const catSlider = document.getElementById('category-slider');
+    const catPrev = document.getElementById('cat-prev');
+    const catNext = document.getElementById('cat-next');
+
+    if (catSlider && catPrev && catNext) {
+        const itemWidth = 303 + 36; // Card width + Gap
+        const originalCount = 8; // Number of original items
+        const totalWidth = originalCount * itemWidth;
+
+        // Initialize at the start of the middle set
+        catSlider.scrollLeft = totalWidth;
+
+        catNext.addEventListener('click', function () {
+            catSlider.scrollBy({ left: itemWidth, behavior: 'smooth' });
+
+            // Check after animation if we should reset to middle
+            setTimeout(() => {
+                if (catSlider.scrollLeft >= totalWidth * 2) {
+                    catSlider.scrollTo({ left: catSlider.scrollLeft - totalWidth, behavior: 'auto' });
+                }
+            }, 500);
+        });
+
+        catPrev.addEventListener('click', function () {
+            catSlider.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+
+            // Check after animation if we should reset to middle
+            setTimeout(() => {
+                if (catSlider.scrollLeft <= totalWidth - itemWidth) {
+                    catSlider.scrollTo({ left: catSlider.scrollLeft + totalWidth, behavior: 'auto' });
+                }
+            }, 500);
         });
     }
 });

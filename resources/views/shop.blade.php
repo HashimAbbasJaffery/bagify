@@ -38,6 +38,8 @@
             <x-blocks.card />
             <x-blocks.card />
         </div>
+
+        <x-shop.pagination />
     </section>
 
     <x-shop.filter-drawer />

@@ -19,6 +19,9 @@
 </head>
 
 <body>
+    <x-layout.parts.search-overlay />
+    <x-layout.parts.cart-drawer />
+    <x-layout.parts.wishlist-drawer />
     <x-dynamic-component :component="layout()->header?->name" />
     {{ $slot }}
 

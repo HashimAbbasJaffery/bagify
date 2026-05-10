@@ -15,13 +15,13 @@
         </ul>
     </nav>
     <div class="action-buttons flex gap-small justify-between">
-        <a href="#">
+        <a href="#" id="search-btn">
             <img src="{{ asset('assets/images/search.png') }}" />
         </a>
-        <a href="#">
+        <a href="#" id="wishlist-btn">
             <img src="{{ asset('assets/images/wishlist.png') }}" />
         </a>
-        <a href="#">
+        <a href="#" id="cart-btn">
             <img src="{{ asset('assets/images/add-to-cart.png') }}" />
         </a>
         <a href="#">

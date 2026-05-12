@@ -1,36 +1,8 @@
 <section id="featured1" class="pt-[50px] mb-[50px] container relative">
     <div class="featured-product flex">
-        <div class="side-images w-[150px] flex flex-col justify-between">
-            <div class="side-image">
-                <img src="{{ asset('assets/images/side-image.png') }}" class="rounded-xs" />
-            </div>
-
-            <div class="side-image">
-                <img src="{{ asset('assets/images/side-image.png') }}" class="rounded-xs" />
-            </div>
-
-            <div class="side-image">
-                <img src="{{ asset('assets/images/side-image.png') }}" class="rounded-xs" />
-            </div>
-
-            <div class="side-image">
-                <img src="{{ asset('assets/images/side-image.png') }}" class="rounded-xs" />
-            </div>
-        </div>
-        <div class="main-image px-[30px]">
-            <img src="{{ asset('assets/images/main-image.png') }}" class="rounded-xs">
-        </div>
+        <x-products.images />
         <div class="product-information bg-white absolute w-1/2 top-1/2 -translate-y-1/2 right-0 p-[25px] rounded-xs">
-            <div class="product-reviews flex items-center">
-                <div class="review-stars text-royal flex gap-[5px]">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                </div>
-                <p class="text-grey mx-[5px] mt-[3px]">45 Reviews</p>
-            </div>
+            <x-products.reviews />
             <div class="product-details">
                 <p class="text-[32px] font-semibold w-2/3 mt-[10px]">White Flower See Through Bridal Lingerie Set</p>
                 <p class="leading-[30px] text-grey w-[550px] mt-[10px] mb-[10px]">Soft satin fabric feels gentle against smooth skin. Elegant lace design enhances charm and defines beauty. Stylish lingerie highlights curves with stunning appeal.</p>

@@ -1,0 +1,1 @@
+<input type="text" placeholder="{{ $placeholder }}" class="resizplaceholdere-none outline-0 placeholder:text-grey placeholder:font-poppins bg-pinkish border text-[14px] px-5 py-4 rounded-md border-stroke px-1 py-1" @style([ 'width: 50%' => !$fullWidth, 'width: 100%' => $fullWidth ]) />

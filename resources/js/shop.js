@@ -19,6 +19,15 @@ const initVue = () => {
                 maxPrice: 5000,
                 minLimit: 0,
                 maxLimit: 5000,
+                sortBy: 'best_selling',
+                sortMenuOpen: false,
+                // Applied filters state (only computed & applied when they click "Go" or loaded from URL)
+                appliedColors: [],
+                appliedSizes: [],
+                appliedCategories: [],
+                appliedStockStatus: null,
+                appliedMinPrice: 0,
+                appliedMaxPrice: 5000,
                 pagination: {
                     current_page: 1,
                     last_page: 1,
@@ -36,6 +45,65 @@ const initVue = () => {
                     left: `${left}%`,
                     right: `${right}%`
                 };
+            },
+            activeFilters() {
+                const list = [];
+
+                // 1. Categories
+                this.appliedCategories.forEach(id => {
+                    const cat = this.categories.find(c => c.id === id);
+                    if (cat) {
+                        list.push({
+                            type: 'category',
+                            id: id,
+                            label: cat.name
+                        });
+                    }
+                });
+
+                // 2. Colors
+                this.appliedColors.forEach(id => {
+                    const col = this.colors.find(c => c.id === id);
+                    if (col) {
+                        list.push({
+                            type: 'color',
+                            id: id,
+                            label: col.name
+                        });
+                    }
+                });
+
+                // 3. Sizes
+                this.appliedSizes.forEach(id => {
+                    const sz = this.sizes.find(s => s.id === id);
+                    if (sz) {
+                        list.push({
+                            type: 'size',
+                            id: id,
+                            label: sz.name.toUpperCase()
+                        });
+                    }
+                });
+
+                // 4. Stock
+                if (this.appliedStockStatus) {
+                    list.push({
+                        type: 'stock',
+                        id: this.appliedStockStatus,
+                        label: this.appliedStockStatus === 'in_stock' ? 'In Stock' : 'Out of Stock'
+                    });
+                }
+
+                // 5. Price
+                if (this.appliedMinPrice !== this.minLimit || this.appliedMaxPrice !== this.maxLimit) {
+                    list.push({
+                        type: 'price',
+                        id: 'price',
+                        label: `Price: PKR ${this.formatPrice(this.appliedMinPrice)} - PKR ${this.formatPrice(this.appliedMaxPrice)}`
+                    });
+                }
+
+                return list;
             }
         },
         methods: {
@@ -60,12 +128,13 @@ const initVue = () => {
                 this.error = null;
                 try {
                     let apiParams = `page=${page}`;
-                    if (this.selectedColors.length > 0) apiParams += `&colors=${this.selectedColors.join(',')}`;
-                    if (this.selectedSizes.length > 0) apiParams += `&sizes=${this.selectedSizes.join(',')}`;
-                    if (this.selectedCategories.length > 0) apiParams += `&categories=${this.selectedCategories.join(',')}`;
-                    if (this.stockStatus) apiParams += `&stock=${this.stockStatus}`;
-                    if (this.minPrice !== this.minLimit) apiParams += `&min_price=${this.minPrice}`;
-                    if (this.maxPrice !== this.maxLimit) apiParams += `&max_price=${this.maxPrice}`;
+                    if (this.appliedColors.length > 0) apiParams += `&colors=${this.appliedColors.join(',')}`;
+                    if (this.appliedSizes.length > 0) apiParams += `&sizes=${this.appliedSizes.join(',')}`;
+                    if (this.appliedCategories.length > 0) apiParams += `&categories=${this.appliedCategories.join(',')}`;
+                    if (this.appliedStockStatus) apiParams += `&stock=${this.appliedStockStatus}`;
+                    if (this.appliedMinPrice !== this.minLimit) apiParams += `&min_price=${this.appliedMinPrice}`;
+                    if (this.appliedMaxPrice !== this.maxLimit) apiParams += `&max_price=${this.appliedMaxPrice}`;
+                    if (this.sortBy) apiParams += `&sort_by=${this.sortBy}`;
 
                     const response = await fetch(`/api/products?${apiParams}`);
                     const data = await response.json();
@@ -137,6 +206,14 @@ const initVue = () => {
                 this.stockStatus = this.stockStatus === status ? null : status;
             },
             applyFilters() {
+                // Copy all draft selections to applied state!
+                this.appliedColors = [...this.selectedColors];
+                this.appliedSizes = [...this.selectedSizes];
+                this.appliedCategories = [...this.selectedCategories];
+                this.appliedStockStatus = this.stockStatus;
+                this.appliedMinPrice = this.minPrice;
+                this.appliedMaxPrice = this.maxPrice;
+
                 this.fetchProducts(1);
                 const filterDrawer = document.getElementById('filter-drawer');
                 const filterOverlay = document.getElementById('filter-overlay');
@@ -147,22 +224,55 @@ const initVue = () => {
                 }
             },
             resetFilters() {
+                // Clear draft selections
                 this.selectedColors = [];
                 this.selectedSizes = [];
                 this.selectedCategories = [];
                 this.stockStatus = null;
                 this.minPrice = this.minLimit;
                 this.maxPrice = this.maxLimit;
-                this.applyFilters();
+
+                // Clear applied selections
+                this.appliedColors = [];
+                this.appliedSizes = [];
+                this.appliedCategories = [];
+                this.appliedStockStatus = null;
+                this.appliedMinPrice = this.minLimit;
+                this.appliedMaxPrice = this.maxLimit;
+
+                this.fetchProducts(1);
             },
             loadFiltersFromUrl() {
                 const params = new URLSearchParams(window.location.search);
-                if (params.has('colors')) this.selectedColors = params.get('colors').split(',').map(Number);
-                if (params.has('sizes')) this.selectedSizes = params.get('sizes').split(',').map(Number);
-                if (params.has('categories')) this.selectedCategories = params.get('categories').split(',').map(Number);
-                if (params.has('stock')) this.stockStatus = params.get('stock');
-                if (params.has('min_price')) this.minPrice = parseInt(params.get('min_price'));
-                if (params.has('max_price')) this.maxPrice = parseInt(params.get('max_price'));
+                if (params.has('colors')) {
+                    this.selectedColors = params.get('colors').split(',').map(Number);
+                    this.appliedColors = [...this.selectedColors];
+                }
+                if (params.has('sizes')) {
+                    this.selectedSizes = params.get('sizes').split(',').map(Number);
+                    this.appliedSizes = [...this.selectedSizes];
+                }
+                if (params.has('categories')) {
+                    this.selectedCategories = params.get('categories').split(',').map(Number);
+                    this.appliedCategories = [...this.selectedCategories];
+                }
+                if (params.has('stock')) {
+                    this.stockStatus = params.get('stock');
+                    this.appliedStockStatus = this.stockStatus;
+                }
+                if (params.has('min_price')) {
+                    this.minPrice = parseInt(params.get('min_price'));
+                    this.appliedMinPrice = this.minPrice;
+                } else {
+                    this.appliedMinPrice = this.minLimit;
+                }
+                if (params.has('max_price')) {
+                    this.maxPrice = parseInt(params.get('max_price'));
+                    this.appliedMaxPrice = this.maxPrice;
+                } else {
+                    this.appliedMaxPrice = this.maxLimit;
+                }
+                if (params.has('sort_by')) this.sortBy = params.get('sort_by');
                 if (params.has('page')) this.pagination.current_page = parseInt(params.get('page'));
             },
             isColorSelected(colorId) { return this.selectedColors.includes(colorId); },
@@ -179,6 +289,51 @@ const initVue = () => {
                 if (window.addCardToCart) {
                     window.addCardToCart(productId, event.currentTarget, event);
                 }
+            },
+            toggleSortMenu() {
+                this.sortMenuOpen = !this.sortMenuOpen;
+            },
+            selectSort(option) {
+                this.sortBy = option;
+                this.sortMenuOpen = false;
+                this.fetchProducts(1);
+            },
+            getSortLabel() {
+                switch(this.sortBy) {
+                    case 'newest': return 'Newest Arrivals';
+                    case 'price_asc': return 'Price: Low to High';
+                    case 'price_desc': return 'Price: High to Low';
+                    case 'best_selling':
+                    default:
+                        return 'Best Selling Products';
+                }
+            },
+            removeFilter(filter) {
+                if (filter.type === 'category') {
+                    const indexApplied = this.appliedCategories.indexOf(filter.id);
+                    if (indexApplied > -1) this.appliedCategories.splice(indexApplied, 1);
+                    const indexSelected = this.selectedCategories.indexOf(filter.id);
+                    if (indexSelected > -1) this.selectedCategories.splice(indexSelected, 1);
+                } else if (filter.type === 'color') {
+                    const indexApplied = this.appliedColors.indexOf(filter.id);
+                    if (indexApplied > -1) this.appliedColors.splice(indexApplied, 1);
+                    const indexSelected = this.selectedColors.indexOf(filter.id);
+                    if (indexSelected > -1) this.selectedColors.splice(indexSelected, 1);
+                } else if (filter.type === 'size') {
+                    const indexApplied = this.appliedSizes.indexOf(filter.id);
+                    if (indexApplied > -1) this.appliedSizes.splice(indexApplied, 1);
+                    const indexSelected = this.selectedSizes.indexOf(filter.id);
+                    if (indexSelected > -1) this.selectedSizes.splice(indexSelected, 1);
+                } else if (filter.type === 'stock') {
+                    this.appliedStockStatus = null;
+                    this.stockStatus = null;
+                } else if (filter.type === 'price') {
+                    this.appliedMinPrice = this.minLimit;
+                    this.appliedMaxPrice = this.maxLimit;
+                    this.minPrice = this.minLimit;
+                    this.maxPrice = this.maxLimit;
+                }
+                this.fetchProducts(1);
             }
         },
         mounted() {
@@ -191,6 +346,15 @@ const initVue = () => {
                 this.loadFiltersFromUrl();
                 this.fetchProducts(this.pagination.current_page);
             });
+
+            // Close sort dropdown if clicked outside
+            document.addEventListener('click', (e) => {
+                const dropdown = document.getElementById('sort-dropdown');
+                const menu = document.getElementById('sort-menu');
+                if (menu && !menu.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
+                    this.sortMenuOpen = false;
+                }
+            });
         }
     });
 
@@ -200,36 +364,7 @@ const initVue = () => {
 document.addEventListener('DOMContentLoaded', function () {
     initVue();
 
-    const dropdown = document.getElementById('sort-dropdown');
-    const menu = document.getElementById('sort-menu');
-    const options = document.querySelectorAll('.sort-option');
-
-    if (dropdown && menu) {
-        function toggleMenu() { menu.classList.toggle('active'); }
-        function closeMenu() { menu.classList.remove('active'); }
-
-        dropdown.addEventListener('click', function (e) {
-            e.stopPropagation();
-            toggleMenu();
-        });
-
-        document.addEventListener('click', function (e) {
-            if (menu && !menu.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
-                closeMenu();
-            }
-        });
-
-        options.forEach(option => {
-            option.addEventListener('click', function () {
-                options.forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-                const selectedText = this.textContent.trim();
-                const textElement = dropdown.querySelector('p');
-                if (textElement) textElement.innerText = selectedText;
-                setTimeout(closeMenu, 200);
-            });
-        });
-    }
+    // Sort menu dropdown is completely handled by Vue inside #shop-app
 
     const filterBtn = document.getElementById('filter-btn');
     const filterDrawer = document.getElementById('filter-drawer');

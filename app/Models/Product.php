@@ -42,6 +42,11 @@ class Product extends Model
         return $this->morphMany(Media::class, 'mediable');
     }
 
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function scopeFilter($query, $filters)
     {
         if (isset($filters['colors'])) {
@@ -79,6 +84,39 @@ class Product extends Model
 
         if (isset($filters['max_price'])) {
             $query->where('price', '<=', $filters['max_price']);
+        }
+
+        if (isset($filters['sort_by'])) {
+            switch ($filters['sort_by']) {
+                case 'newest':
+                    $query->orderByDesc('created_at');
+                    break;
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'best_selling':
+                    $query->withSum('orderItems', 'quantity')
+                          ->orderByRaw('COALESCE(order_items_sum_quantity, 0) DESC')
+                          ->orderByDesc('is_featured')
+                          ->orderByDesc('discount_percentage')
+                          ->orderByDesc('created_at');
+                default:
+                    $query->withSum('orderItems', 'quantity')
+                          ->orderByRaw('COALESCE(order_items_sum_quantity, 0) DESC')
+                          ->orderByDesc('is_featured')
+                          ->orderByDesc('discount_percentage')
+                          ->orderByDesc('created_at');
+                    break;
+            }
+        } else {
+            $query->withSum('orderItems', 'quantity')
+                  ->orderByRaw('COALESCE(order_items_sum_quantity, 0) DESC')
+                  ->orderByDesc('is_featured')
+                  ->orderByDesc('discount_percentage')
+                  ->orderByDesc('created_at');
         }
 
         return $query;

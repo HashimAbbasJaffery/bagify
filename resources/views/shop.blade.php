@@ -2,31 +2,34 @@
     <x-breadcrumb />
 
     <section id="shop-app">
-        <!-- <div class="container my-[70px] flex gap-10 overflow-x-auto pb-4 scrollbar-hide" v-cloak>
-            <template v-for="category in categories" :key="category.id">
-                <x-circle-category-card 
-                    v-on:click="toggleCategory(category.id); applyFilters()"
-                    class="flex-shrink-0 cursor-pointer"
-                    name="category.name"
-                    image="category.image"
-                />
-            </template>
-        </div> -->
-        <div class="mt-10 action-btns container mb-[80px] flex justify-between relative z-10">
+        <!-- Active Filters Badges Section -->
+        <div v-if="activeFilters.length > 0" class="container mt-6 flex flex-wrap gap-3 items-center select-none" v-cloak>
+            <span class="text-grey font-poppins text-[14px]">Active Filters:</span>
+            <div v-for="filter in activeFilters" :key="filter.type + '-' + filter.id" 
+                 class="flex items-center gap-2 bg-[#F6F6F6] text-black border border-[#E6E6E6] px-4 py-1.5 rounded-full font-poppins text-[13px] hover:border-black transition-all">
+                <span>@{{ filter.label }}</span>
+                <button @click="removeFilter(filter)" class="text-grey hover:text-black focus:outline-none ml-1 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-[11px] font-bold"></i>
+                </button>
+            </div>
+            <button @click="resetFilters" class="text-[#8B3118] hover:text-black font-poppins text-[13px] ml-2 font-medium cursor-pointer transition-colors">Clear All</button>
+        </div>
+
+        <div class="mt-10 action-btns container mb-[80px] flex justify-between relative z-10" v-cloak>
             <button id="filter-btn" class="bg-black text-white px-6 py-2 flex gap-4 items-center rounded-full cursor-pointer">
                 <i class="fa-solid fa-sliders"></i>
                 Filters
             </button>
             <div class="relative w-1/3">
-                <div id="sort-dropdown" class="cursor-pointer flex justify-between items-center px-5 py-3 rounded-full w-full" style="border: 1px solid #E6E6E6; background-color: #F6F6F6;">
-                    <p class="font-[14px]" style="color: #555555;">Best Selling Products</p>
+                <div id="sort-dropdown" class="cursor-pointer flex justify-between items-center px-5 py-3 rounded-full w-full select-none" style="border: 1px solid #E6E6E6; background-color: #F6F6F6;" @click.stop="toggleSortMenu">
+                    <p class="font-[14px]" style="color: #555555;">@{{ getSortLabel() }}</p>
                     <p><i class="fa-solid fa-angle-down font-[14px]" style="color: #555555;"></i></p>
                 </div>
-                <div id="sort-menu" class="sort-menu">
-                    <div class="sort-option active">Best Selling Products</div>
-                    <div class="sort-option">Newest Arrivals</div>
-                    <div class="sort-option">Price: Low to High</div>
-                    <div class="sort-option">Price: High to Low</div>
+                <div id="sort-menu" class="sort-menu" :class="{ 'active': sortMenuOpen }">
+                    <div class="sort-option" :class="{ 'active': sortBy === 'best_selling' }" @click="selectSort('best_selling')">Best Selling Products</div>
+                    <div class="sort-option" :class="{ 'active': sortBy === 'newest' }" @click="selectSort('newest')">Newest Arrivals</div>
+                    <div class="sort-option" :class="{ 'active': sortBy === 'price_asc' }" @click="selectSort('price_asc')">Price: Low to High</div>
+                    <div class="sort-option" :class="{ 'active': sortBy === 'price_desc' }" @click="selectSort('price_desc')">Price: High to Low</div>
                 </div>
             </div>
         </div>

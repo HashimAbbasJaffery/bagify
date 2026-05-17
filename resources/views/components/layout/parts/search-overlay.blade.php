@@ -23,77 +23,11 @@
             <p class="mt-4 text-white/50 font-poppins tracking-widest uppercase text-[12px]">Searching for your style...</p>
         </div>
 
-        <!-- Search Results (Demo) -->
+        <!-- Search Results -->
         <div id="search-results" class="mt-[60px] hidden opacity-0 transition-all duration-300 transform translate-y-4 max-h-[60vh] overflow-y-auto scrollbar-hide pr-4">
-            <h3 class="text-white/40 text-[14px] uppercase tracking-widest mb-6 font-poppins">Products Found</h3>
-            <div class="grid grid-cols-4 gap-8">
-                <!-- Demo Product 1 -->
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag1.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Black Woven Bag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$98.00</p>
-                </div>
-                <!-- Demo Product 2 -->
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag2.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Red Patent Bag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$89.00</p>
-                </div>
-                <!-- Demo Product 3 -->
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag3.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Night Weave Handbag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$120.00</p>
-                </div>
-                <!-- Demo Product 4 -->
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag4.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Crimson Glaze Shoulder Bag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$75.00</p>
-                </div>
-                <!-- Duplicate for Scroll Demo -->
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag1.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Black Woven Bag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$98.00</p>
-                </div>
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag2.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Red Patent Bag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$89.00</p>
-                </div>
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag3.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Night Weave Handbag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$120.00</p>
-                </div>
-                <div class="group cursor-pointer">
-                    <div class="aspect-square bg-white/5 rounded-2xl overflow-hidden mb-4">
-                        <img src="{{ asset('assets/images/bag4.jpg') }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h4 class="text-white font-poppins text-[16px]">Crimson Glaze Shoulder Bag</h4>
-                    <p class="text-white/60 font-poppins text-[14px]">$75.00</p>
-                </div>
-            </div>
-            
-            <div class="flex justify-center mt-12 pb-10">
-                <button class="bg-white text-black px-10 py-3 rounded-full font-poppins font-medium hover:bg-black hover:text-white border border-white transition-all duration-300">
-                    Load More Results
-                </button>
+            <h3 id="search-results-title" class="text-white/40 text-[14px] uppercase tracking-widest mb-6 font-poppins">Products Found</h3>
+            <div id="search-results-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <!-- Dynamic results will be injected here by app.js -->
             </div>
         </div>
     </div>

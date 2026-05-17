@@ -5,11 +5,16 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/shop.js'],
+            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/shop.js', 'resources/js/cart.js', 'resources/js/checkout.js'],
             refresh: true,
         }),
         tailwindcss(),
     ],
+    resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.esm-bundler.js'
+        }
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

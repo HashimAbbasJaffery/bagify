@@ -5,15 +5,22 @@ namespace App\View\Components\Sections\Products;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Models\Product;
 
-class recommendedProducts extends Component
+class RecommendedProducts extends Component
 {
+    public $products;
+
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
-        //
+        $this->products = Product::with(['colors', 'sizes', 'media', 'categories'])
+            ->where('status', 'active')
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
     }
 
     /**

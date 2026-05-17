@@ -20,9 +20,19 @@
 
 </style>
 @endpush
+@props([
+    'id' => null,
+    'name' => 'Whispers of the Emerald Bloom',
+    'price' => '1,000',
+    'type' => 'Brown Leather Handbag',
+    'image' => asset('assets/images/product.png'),
+    'slug' => ''
+])
 <div class="product w-[303px] text-left cursor-pointer">
     <div class="product-image relative group">
-        <img src="{{ asset('assets/images/product.png') }}" class="rounded-xs mb-[20px]" />
+        <a href="{{ $slug && !str_starts_with($slug, 'product') ? url('/product/' . preg_replace('/^(&#039;|&quot;|[\'\"&amp;#039;])+|(&#039;|&quot;|[\'\"&amp;#039;])+$/', '', $slug)) : '#' }}" :href="'/product/' + {{ $slug }}">
+            <img :src="{{ $image }}" src="{{ $image }}" class="rounded-xs mb-[20px] w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+        </a>
 
         <button
             class="wishlist-btn cursor-pointer absolute top-5 right-5 w-[44px] h-[44px] 
@@ -67,21 +77,26 @@
                rounded-full flex items-center gap-[10px] border border-black
                transform translate-y-8 opacity-0
                transition-all duration-300
-               group-hover:translate-y-0 group-hover:opacity-100">
+               group-hover:translate-y-0 group-hover:opacity-100"
+            onclick="event.stopPropagation(); event.preventDefault(); window.addCardToCart({{ $id ?? 'null' }}, this, event)"
+            @click.stop.prevent="addToCartFromCard(product.id, $event)"
+        >
             <img src="{{ asset('assets/images/basket.png') }}" />
             Add To Cart
         </button>
     </div>
     <div class="product-body">
-        <p class="product-title font-semibold mb-[5px]">
-            Whispers of the Emerald Bloom
-        </p>
+        <a href="{{ $slug && !str_starts_with($slug, 'product') ? url('/product/' . preg_replace('/^(&#039;|&quot;|[\'\"&amp;#039;])+|(&#039;|&quot;|[\'\"&amp;#039;])+$/', '', $slug)) : '#' }}" :href="'/product/' + {{ $slug }}" class="hover:underline">
+            <p class="product-title font-semibold mb-[5px]">
+                {!! $name !!}
+            </p>
+        </a>
         <p class="product-type text-[12px] text-grey mb-[5px]">
-            Brown Leather Handbag
+            {!! $type !!}
         </p>
         <p class="product-price font-semibold">
             <span class="currency">PKR </span>
-            1,000
+            {!! $price !!}
         </p>
     </div>
 </div>

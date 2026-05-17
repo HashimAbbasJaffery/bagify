@@ -21,8 +21,17 @@
         <a href="#" id="wishlist-btn">
             <img src="{{ asset('assets/images/wishlist.png') }}" />
         </a>
-        <a href="#" id="cart-btn">
+        @php
+            $initialCartCount = array_sum(array_column(session()->get('cart', []), 'quantity'));
+        @endphp
+        <a href="#" id="cart-btn" class="relative inline-block">
             <img src="{{ asset('assets/images/add-to-cart.png') }}" />
+            <span 
+                id="cart-count-badge" 
+                class="absolute -top-1.5 -right-1.5 bg-[#8B3118] text-white text-[10px] font-bold font-poppins w-[18px] h-[18px] rounded-full flex items-center justify-center border border-white transition-all duration-300 {{ $initialCartCount > 0 ? '' : 'hidden scale-0' }}"
+            >
+                {{ $initialCartCount }}
+            </span>
         </a>
         <a href="#">
             <img src="{{ asset('assets/images/account.png') }}" />
